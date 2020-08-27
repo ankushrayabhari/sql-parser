@@ -7,7 +7,7 @@ BIN        = bin
 SRC        = src
 SRCPARSER  = src/parser
 
-INSTALL     = lib
+INSTALL     = .
 
 ######################################
 ############ Compile Mode ############
