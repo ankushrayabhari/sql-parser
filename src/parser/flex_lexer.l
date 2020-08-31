@@ -45,6 +45,8 @@ static thread_local std::stringstream strbuf;
 %option case-insensitive
 %option prefix="hsql_"
 %option bison-locations
+%option 8bit
+
 /* %option nodefault */
 
 
@@ -155,6 +157,7 @@ LIKE		TOKEN(LIKE)
 ILIKE		TOKEN(ILIKE)
 LOAD		TOKEN(LOAD)
 LONG		TOKEN(LONG)
+BIGINT		TOKEN(LONG)
 NULL		TOKEN(NULL)
 PLAN		TOKEN(PLAN)
 SHOW		TOKEN(SHOW)
