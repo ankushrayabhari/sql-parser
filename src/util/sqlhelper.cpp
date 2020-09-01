@@ -411,7 +411,8 @@ namespace hsql {
       {kDatetimeHour, "HOUR"},
       {kDatetimeDay, "DAY"},
       {kDatetimeMonth, "MONTH"},
-      {kDatetimeYear, "YEAR"}
+      {kDatetimeYear, "YEAR"},
+      {kDatetimeQuarter, "QUARTER"}
     };
 
     const auto found = operatorToToken.find(datetime);

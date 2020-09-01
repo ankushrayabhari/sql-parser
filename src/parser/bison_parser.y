@@ -180,7 +180,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT THEN TIME
 %token VIEW WHEN WITH ADD ALL AND ASC END FOR INT KEY TINYINT SMALLINT BIGINT
 %token NOT OFF SET TOP AS BY IF IN IS OF ON OR TO
-%token ARRAY CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR
+%token ARRAY CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR QUARTER
 %token TRUE FALSE
 %token TRANSACTION BEGIN COMMIT ROLLBACK
 
@@ -1015,6 +1015,7 @@ datetime_field:
     |   DAY { $$ = kDatetimeDay; }
     |   MONTH { $$ = kDatetimeMonth; }
     |   YEAR { $$ = kDatetimeYear; }
+	|	QUARTER { $$ = kDatetimeQuarter; } 
     ;
 
 date_literal:

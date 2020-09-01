@@ -81,6 +81,7 @@ enum DatetimeField {
     kDatetimeDay,
     kDatetimeMonth,
     kDatetimeYear,
+    kDatetimeQuarter
 };
 
 typedef struct Expr Expr;
