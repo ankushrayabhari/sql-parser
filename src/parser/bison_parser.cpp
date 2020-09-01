@@ -3719,7 +3719,7 @@ yyreduce:
 
   case 57:
 #line 560 "bison_parser.y"
-                     { (yyval.column_type_t) = ColumnType{DataType::LONG}; }
+                     { (yyval.column_type_t) = ColumnType{DataType::INT, 64}; }
 #line 3724 "bison_parser.cpp"
     break;
 

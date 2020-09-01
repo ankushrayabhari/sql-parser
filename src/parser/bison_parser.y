@@ -557,7 +557,7 @@ column_type:
 	|	SMALLINT { $$ = ColumnType{DataType::INT, 16}; }
 	|	INT { $$ = ColumnType{DataType::INT, 32}; }
 	|	BIGINT { $$ = ColumnType{DataType::INT, 64}; }
-	|	LONG { $$ = ColumnType{DataType::LONG}; }
+	|	LONG { $$ = ColumnType{DataType::INT, 64}; }
 	|	FLOAT { $$ = ColumnType{DataType::FLOAT}; }
 	|	DOUBLE { $$ = ColumnType{DataType::DOUBLE}; }
 	|	VARCHAR '(' INTVAL ')' { $$ = ColumnType{DataType::VARCHAR, $3}; }

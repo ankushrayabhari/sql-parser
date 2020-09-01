@@ -34,10 +34,7 @@ namespace hsql {
         stream << "UNKNOWN";
         break;
       case DataType::INT:
-        stream << "INT";
-        break;
-      case DataType::LONG:
-        stream << "LONG";
+        stream << "INT(" << column_type.length << ")";
         break;
       case DataType::FLOAT:
         stream << "FLOAT";

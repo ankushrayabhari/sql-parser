@@ -7,7 +7,6 @@ namespace hsql {
   enum class DataType {
     UNKNOWN,
     INT,
-    LONG,
     FLOAT,
     DOUBLE,
     CHAR,
