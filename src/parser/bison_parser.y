@@ -180,7 +180,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT THEN TIME
 %token VIEW WHEN WITH ADD ALL AND ASC END FOR INT KEY TINYINT SMALLINT BIGINT
 %token NOT OFF SET TOP AS BY IF IN IS OF ON OR TO
-%token ARRAY CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR QUARTER
+%token ARRAY CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR QUARTER DECIMAL
 %token TRUE FALSE
 %token TRANSACTION BEGIN COMMIT ROLLBACK
 
@@ -561,6 +561,7 @@ column_type:
 	|	LONG { $$ = ColumnType{DataType::INT, 64}; }
 	|	FLOAT { $$ = ColumnType{DataType::FLOAT}; }
 	|	DOUBLE { $$ = ColumnType{DataType::DOUBLE}; }
+	|	DECIMAL '(' INTVAL ',' INTVAL ')' { $$ = ColumnType{DataType::DECIMAL, $3, $5}; }
 	|	VARCHAR '(' INTVAL ')' { $$ = ColumnType{DataType::VARCHAR, $3}; }
 	|	CHAR '(' INTVAL ')' { $$ = ColumnType{DataType::CHAR, $3}; }
 	|	TEXT { $$ = ColumnType{DataType::TEXT}; }

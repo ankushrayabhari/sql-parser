@@ -15,15 +15,17 @@ namespace hsql {
     DATETIME,
     DATE,
     TIMESTAMP,
-    TIME
+    TIME,
+    DECIMAL
   };
 
   // Represents the type of a column, e.g., FLOAT or VARCHAR(10)
   struct ColumnType {
     ColumnType() = default;
-    ColumnType(DataType data_type, int64_t length = 0);
+    ColumnType(DataType data_type, int64_t length = 0, int64_t scale = 0);
     DataType data_type;
     int64_t length;  // Used for, e.g., VARCHAR(10)
+    int64_t scale; // Used for DECIMAL(length, scale)
   };
 
   bool operator==(const ColumnType& lhs, const ColumnType& rhs);

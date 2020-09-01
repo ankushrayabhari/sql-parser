@@ -12,9 +12,9 @@ namespace hsql {
     free(name);
   }
 
-  ColumnType::ColumnType(DataType data_type, int64_t length) :
+  ColumnType::ColumnType(DataType data_type, int64_t length, int64_t scale) :
     data_type(data_type),
-    length(length) {};
+    length(length), scale(scale) {};
 
   bool operator==(const ColumnType& lhs, const ColumnType& rhs) {
     if (lhs.data_type != rhs.data_type) return false;
@@ -34,7 +34,10 @@ namespace hsql {
         stream << "UNKNOWN";
         break;
       case DataType::INT:
-        stream << "INT(" << column_type.length << ")";
+        stream << "INT" << column_type.length;
+        break;
+      case DataType::DECIMAL:
+        stream << "DECIMAL(" << column_type.length << "," << column_type.scale << ")";
         break;
       case DataType::FLOAT:
         stream << "FLOAT";

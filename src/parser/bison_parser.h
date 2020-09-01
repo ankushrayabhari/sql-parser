@@ -227,20 +227,21 @@ extern int hsql_debug;
     SQL_MONTH = 394,               /* MONTH  */
     SQL_YEAR = 395,                /* YEAR  */
     SQL_QUARTER = 396,             /* QUARTER  */
-    SQL_TRUE = 397,                /* TRUE  */
-    SQL_FALSE = 398,               /* FALSE  */
-    SQL_TRANSACTION = 399,         /* TRANSACTION  */
-    SQL_BEGIN = 400,               /* BEGIN  */
-    SQL_COMMIT = 401,              /* COMMIT  */
-    SQL_ROLLBACK = 402,            /* ROLLBACK  */
-    SQL_EQUALS = 403,              /* EQUALS  */
-    SQL_NOTEQUALS = 404,           /* NOTEQUALS  */
-    SQL_LESS = 405,                /* LESS  */
-    SQL_GREATER = 406,             /* GREATER  */
-    SQL_LESSEQ = 407,              /* LESSEQ  */
-    SQL_GREATEREQ = 408,           /* GREATEREQ  */
-    SQL_NOTNULL = 409,             /* NOTNULL  */
-    SQL_UMINUS = 410               /* UMINUS  */
+    SQL_DECIMAL = 397,             /* DECIMAL  */
+    SQL_TRUE = 398,                /* TRUE  */
+    SQL_FALSE = 399,               /* FALSE  */
+    SQL_TRANSACTION = 400,         /* TRANSACTION  */
+    SQL_BEGIN = 401,               /* BEGIN  */
+    SQL_COMMIT = 402,              /* COMMIT  */
+    SQL_ROLLBACK = 403,            /* ROLLBACK  */
+    SQL_EQUALS = 404,              /* EQUALS  */
+    SQL_NOTEQUALS = 405,           /* NOTEQUALS  */
+    SQL_LESS = 406,                /* LESS  */
+    SQL_GREATER = 407,             /* GREATER  */
+    SQL_LESSEQ = 408,              /* LESSEQ  */
+    SQL_GREATEREQ = 409,           /* GREATEREQ  */
+    SQL_NOTNULL = 410,             /* NOTNULL  */
+    SQL_UMINUS = 411               /* UMINUS  */
   };
   typedef enum hsql_tokentype hsql_token_kind_t;
 #endif
@@ -297,7 +298,7 @@ union HSQL_STYPE
 	std::vector<hsql::OrderDescription*>* order_vec;
 	std::vector<hsql::WithDescription*>* with_description_vec;
 
-#line 301 "bison_parser.h"
+#line 302 "bison_parser.h"
 
 };
 typedef union HSQL_STYPE HSQL_STYPE;
