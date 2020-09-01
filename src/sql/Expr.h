@@ -30,7 +30,8 @@ enum ExprType {
     kExprExtract,
     kExprCast,
     kExprLiteralDate,
-    kExprLiteralInterval    
+    kExprLiteralInterval,
+    kExprLiteralBool    
 };
 
 // Operator types. These are important for expressions of type kExprOperator.
@@ -104,11 +105,10 @@ struct Expr {
     char* table;
     char* alias;
     char* fval;
-    int64_t ival;
-    int64_t ival2;
+    char* ival;
+    bool  bval;
     DatetimeField datetimeField;
     ColumnType columnType;
-    bool isBoolLiteral;
 
     OperatorType opType;
     bool distinct;
@@ -143,7 +143,7 @@ struct Expr {
 
     static Expr* makeCase(Expr* expr, Expr* when, Expr* elseExpr);
 
-    static Expr* makeLiteral(int64_t val);
+    static Expr* makeIntLiteral(char* val);
 
     static Expr* makeFloatLiteral(char* val);
 
@@ -163,10 +163,6 @@ struct Expr {
 
     static Expr* makeFunctionRef(char* func_name, std::vector<Expr*>* exprList,
                                  bool distinct);
-
-    static Expr* makeArray(std::vector<Expr*>* exprList);
-
-    static Expr* makeArrayIndex(Expr* expr, int64_t index);
 
     static Expr* makeParameter(int id);
 

@@ -217,32 +217,31 @@ extern int hsql_debug;
     SQL_ON = 384,                  /* ON  */
     SQL_OR = 385,                  /* OR  */
     SQL_TO = 386,                  /* TO  */
-    SQL_ARRAY = 387,               /* ARRAY  */
-    SQL_CONCAT = 388,              /* CONCAT  */
-    SQL_ILIKE = 389,               /* ILIKE  */
-    SQL_SECOND = 390,              /* SECOND  */
-    SQL_MINUTE = 391,              /* MINUTE  */
-    SQL_HOUR = 392,                /* HOUR  */
-    SQL_DAY = 393,                 /* DAY  */
-    SQL_MONTH = 394,               /* MONTH  */
-    SQL_YEAR = 395,                /* YEAR  */
-    SQL_QUARTER = 396,             /* QUARTER  */
-    SQL_DECIMAL = 397,             /* DECIMAL  */
-    SQL_TRUE = 398,                /* TRUE  */
-    SQL_FALSE = 399,               /* FALSE  */
-    SQL_BOOLEAN = 400,             /* BOOLEAN  */
-    SQL_TRANSACTION = 401,         /* TRANSACTION  */
-    SQL_BEGIN = 402,               /* BEGIN  */
-    SQL_COMMIT = 403,              /* COMMIT  */
-    SQL_ROLLBACK = 404,            /* ROLLBACK  */
-    SQL_EQUALS = 405,              /* EQUALS  */
-    SQL_NOTEQUALS = 406,           /* NOTEQUALS  */
-    SQL_LESS = 407,                /* LESS  */
-    SQL_GREATER = 408,             /* GREATER  */
-    SQL_LESSEQ = 409,              /* LESSEQ  */
-    SQL_GREATEREQ = 410,           /* GREATEREQ  */
-    SQL_NOTNULL = 411,             /* NOTNULL  */
-    SQL_UMINUS = 412               /* UMINUS  */
+    SQL_CONCAT = 387,              /* CONCAT  */
+    SQL_ILIKE = 388,               /* ILIKE  */
+    SQL_SECOND = 389,              /* SECOND  */
+    SQL_MINUTE = 390,              /* MINUTE  */
+    SQL_HOUR = 391,                /* HOUR  */
+    SQL_DAY = 392,                 /* DAY  */
+    SQL_MONTH = 393,               /* MONTH  */
+    SQL_YEAR = 394,                /* YEAR  */
+    SQL_QUARTER = 395,             /* QUARTER  */
+    SQL_DECIMAL = 396,             /* DECIMAL  */
+    SQL_TRUE = 397,                /* TRUE  */
+    SQL_FALSE = 398,               /* FALSE  */
+    SQL_BOOLEAN = 399,             /* BOOLEAN  */
+    SQL_TRANSACTION = 400,         /* TRANSACTION  */
+    SQL_BEGIN = 401,               /* BEGIN  */
+    SQL_COMMIT = 402,              /* COMMIT  */
+    SQL_ROLLBACK = 403,            /* ROLLBACK  */
+    SQL_EQUALS = 404,              /* EQUALS  */
+    SQL_NOTEQUALS = 405,           /* NOTEQUALS  */
+    SQL_LESS = 406,                /* LESS  */
+    SQL_GREATER = 407,             /* GREATER  */
+    SQL_LESSEQ = 408,              /* LESSEQ  */
+    SQL_GREATEREQ = 409,           /* GREATEREQ  */
+    SQL_NOTNULL = 410,             /* NOTNULL  */
+    SQL_UMINUS = 411               /* UMINUS  */
   };
   typedef enum hsql_tokentype hsql_token_kind_t;
 #endif
@@ -281,7 +280,7 @@ union HSQL_STYPE
 	hsql::DatetimeField datetime_field;
 	hsql::LimitDescription* limit;
 	hsql::ColumnDefinition* column_t;
-	hsql::ColumnType column_type_t;
+	hsql::ColumnType* column_type_t;
 	hsql::ImportType import_type_t;
 	hsql::GroupByDescription* group_t;
 	hsql::UpdateClause* update_t;
@@ -298,7 +297,7 @@ union HSQL_STYPE
 	std::vector<hsql::OrderDescription*>* order_vec;
 	std::vector<hsql::WithDescription*>* with_description_vec;
 
-#line 302 "bison_parser.h"
+#line 301 "bison_parser.h"
 
 };
 typedef union HSQL_STYPE HSQL_STYPE;

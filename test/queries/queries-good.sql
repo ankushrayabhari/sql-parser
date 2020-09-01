@@ -14,7 +14,6 @@ SELECT * FROM t1 UNION (SELECT * FROM t2 UNION SELECT * FROM t3) ORDER BY col1;
 SELECT TOP 10 * FROM t1 ORDER BY col1, col2;
 SELECT a, MAX(b), MAX(c, d), CUSTOM(q, UP(r)) AS f FROM t1;
 SELECT * FROM t WHERE a BETWEEN 1 and c;
-SELECT * FROM t WHERE a = ? AND b = ?;
 SELECT City.name, Product.category, SUM(price) FROM fact INNER JOIN City ON fact.city_id = City.id INNER JOIN Product ON fact.product_id = Product.id GROUP BY City.name, Product.category;
 SELECT SUBSTR(a, 3, 5) FROM t;
 # JOIN
@@ -48,9 +47,6 @@ UPDATE some_schema.students SET grade = 1.0;
 DROP TABLE students;
 DROP TABLE IF EXISTS students;
 DROP VIEW IF EXISTS students;
-# PREPARE
-PREPARE prep_inst FROM 'INSERT INTO test VALUES (?, ?, ?)';
-PREPARE prep2 FROM 'INSERT INTO test VALUES (?, 0, 0); INSERT INTO test VALUES (0, ?, 0); INSERT INTO test VALUES (0, 0, ?);';
 EXECUTE prep_inst(1, 2, 3);
 EXECUTE prep;
 DEALLOCATE PREPARE prep;

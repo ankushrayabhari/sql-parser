@@ -19,7 +19,7 @@ mode ?= release
 MODE_LOG = ""
 OPT_FLAG =
 ifeq ($(mode), debug)
-	OPT_FLAG = -g
+	OPT_FLAG = -g -fsanitize=address
 	MODE_LOG = "Building in \033[1;31mdebug\033[0m mode"
 else
 	OPT_FLAG = -O3

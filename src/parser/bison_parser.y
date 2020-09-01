@@ -121,7 +121,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 	hsql::DatetimeField datetime_field;
 	hsql::LimitDescription* limit;
 	hsql::ColumnDefinition* column_t;
-	hsql::ColumnType column_type_t;
+	hsql::ColumnType* column_type_t;
 	hsql::ImportType import_type_t;
 	hsql::GroupByDescription* group_t;
 	hsql::UpdateClause* update_t;
@@ -143,7 +143,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 /*********************************
  ** Destructor symbols
  *********************************/
-%destructor { } <ival> <uval> <bval> <order_type> <datetime_field> <column_type_t> <import_type_t>
+%destructor { } <uval> <bval> <order_type> <datetime_field> <import_type_t>
 %destructor { free( ($$.name) ); free( ($$.schema) ); } <table_name>
 %destructor { free( ($$) ); } <sval>
 %destructor {
@@ -160,8 +160,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 /*********************************
  ** Token Definition
  *********************************/
-%token <sval> IDENTIFIER STRING FLOATVAL
-%token <ival> INTVAL
+%token <sval> IDENTIFIER STRING FLOATVAL INTVAL
 
 /* SQL Keywords */
 %token DEALLOCATE PARAMETERS INTERSECT TEMPORARY TIMESTAMP INTERVAL
@@ -178,7 +177,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT THEN TIME
 %token VIEW WHEN WITH ADD ALL AND ASC END FOR INT KEY TINYINT SMALLINT BIGINT
 %token NOT OFF SET TOP AS BY IF IN IS OF ON OR TO
-%token ARRAY CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR QUARTER DECIMAL
+%token CONCAT ILIKE SECOND MINUTE HOUR DAY MONTH YEAR QUARTER DECIMAL
 %token TRUE FALSE BOOLEAN
 %token TRANSACTION BEGIN COMMIT ROLLBACK
 
@@ -206,10 +205,10 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <table> 		    opt_from_clause from_clause table_ref table_ref_atomic table_ref_name nonjoin_table_ref_atomic
 %type <table>		    join_clause table_ref_name_no_alias
 %type <expr> 		    expr operand scalar_expr unary_expr binary_expr logic_expr exists_expr extract_expr cast_expr
-%type <expr>		    function_expr between_expr expr_alias param_expr
+%type <expr>		    function_expr between_expr expr_alias
 %type <expr> 		    column_name literal int_literal num_literal string_literal bool_literal
 %type <expr> 		    comp_expr opt_where join_condition case_expr case_list in_expr hint
-%type <expr> 		    array_expr array_index null_literal
+%type <expr> 		    null_literal
 %type <expr> 		    date_literal interval_literal
 %type <limit>		    opt_limit opt_top
 %type <order>		    order_desc
@@ -269,16 +268,6 @@ input:
 			for (SQLStatement* stmt : *$1) {
 				// Transfers ownership of the statement.
 				result->addStatement(stmt);
-			}
-
-			unsigned param_id = 0;
-			for (void* param : yyloc.param_list) {
-				if (param != nullptr) {
-					Expr* expr = (Expr*) param;
-					expr->ival = param_id;
-					result->addParameter(expr);
-					++param_id;
-				}
 			}
 			delete $1;
 		}
@@ -552,22 +541,22 @@ column_def:
 	;
 
 column_type:
-		TINYINT { $$ = ColumnType{DataType::INT, 8}; }
-	|	SMALLINT { $$ = ColumnType{DataType::INT, 16}; }
-	|	INT { $$ = ColumnType{DataType::INT, 32}; }
-	|	BIGINT { $$ = ColumnType{DataType::INT, 64}; }
-	|	LONG { $$ = ColumnType{DataType::INT, 64}; }
-	|	FLOAT { $$ = ColumnType{DataType::FLOAT}; }
-	|	DOUBLE { $$ = ColumnType{DataType::DOUBLE}; }
-	|	DECIMAL '(' INTVAL ',' INTVAL ')' { $$ = ColumnType{DataType::DECIMAL, $3, $5}; }
-	|	BOOLEAN { $$ = ColumnType{DataType::BOOLEAN}; }
-	|	VARCHAR '(' INTVAL ')' { $$ = ColumnType{DataType::VARCHAR, $3}; }
-	|	CHAR '(' INTVAL ')' { $$ = ColumnType{DataType::CHAR, $3}; }
-	|	TEXT { $$ = ColumnType{DataType::TEXT}; }
-	|	DATETIME { $$ = ColumnType{DataType::DATETIME}; }
-	|	DATE { $$ = ColumnType{DataType::DATE}; }
-	|	TIMESTAMP { $$ = ColumnType{DataType::TIMESTAMP}; };
-	|	TIME { $$ = ColumnType{DataType::TIME}; }
+		TINYINT { $$ = new ColumnType{DataType::INT, "8"}; }
+	|	SMALLINT { $$ = new ColumnType{DataType::INT, "16"}; }
+	|	INT { $$ = new ColumnType{DataType::INT, "32"}; }
+	|	BIGINT { $$ = new ColumnType{DataType::INT, "64"}; }
+	|	LONG { $$ = new ColumnType{DataType::INT, "64"}; }
+	|	FLOAT { $$ = new ColumnType{DataType::FLOAT}; }
+	|	DOUBLE { $$ = new ColumnType{DataType::DOUBLE}; }
+	|	DECIMAL '(' INTVAL ',' INTVAL ')' { $$ = new ColumnType{DataType::DECIMAL, $3, $5}; }
+	|	BOOLEAN { $$ = new ColumnType{DataType::BOOLEAN}; }
+	|	VARCHAR '(' INTVAL ')' { $$ = new ColumnType{DataType::VARCHAR, $3}; }
+	|	CHAR '(' INTVAL ')' { $$ = new ColumnType{DataType::CHAR, $3}; }
+	|	TEXT { $$ = new ColumnType{DataType::TEXT}; }
+	|	DATETIME { $$ = new ColumnType{DataType::DATETIME}; }
+	|	DATE { $$ = new ColumnType{DataType::DATE}; }
+	|	TIMESTAMP { $$ = new ColumnType{DataType::TIMESTAMP}; }
+	|	TIME { $$ = new ColumnType{DataType::TIME}; }
 	;
 
 opt_column_nullable:
@@ -915,7 +904,6 @@ expr:
 
 operand:
 		'(' expr ')' { $$ = $2; }
-	|	array_index
 	|	scalar_expr
 	|	unary_expr
 	|	binary_expr
@@ -923,7 +911,6 @@ operand:
 	|	function_expr
 	|	extract_expr
 	|	cast_expr
-	|	array_expr
 	|	'(' select_no_paren ')' { $$ = Expr::makeSelect($2); }
 	;
 
@@ -1005,7 +992,7 @@ extract_expr:
     ;
 
 cast_expr:
-        CAST '(' expr AS column_type ')'    { $$ = Expr::makeCast($3, $5); }
+        CAST '(' expr AS column_type ')'    { $$ = Expr::makeCast($3, std::move(*$5)); }
     ;
 
 datetime_field:
@@ -1026,14 +1013,6 @@ interval_literal:
 		INTERVAL string_literal datetime_field { $$ = Expr::makeInterval($2->name, $3); }
 	;
 
-array_expr:
-	  	ARRAY '[' expr_list ']' { $$ = Expr::makeArray($3); }
-	;
-
-array_index:
-	   	operand '[' int_literal ']' { $$ = Expr::makeArrayIndex($1, $3->ival); }
-	;
-
 between_expr:
 		operand BETWEEN operand AND operand { $$ = Expr::makeBetween($1, $3, $5); }
 	;
@@ -1050,7 +1029,6 @@ literal:
 	|	bool_literal
 	|	num_literal
 	|	null_literal
-	|	param_expr
 	|	date_literal
 	|	interval_literal
 	;
@@ -1070,19 +1048,11 @@ num_literal:
 	;
 
 int_literal:
-		INTVAL { $$ = Expr::makeLiteral($1); }
+		INTVAL { $$ = Expr::makeIntLiteral($1); }
 	;
 
 null_literal:
 	    	NULL { $$ = Expr::makeNullLiteral(); }
-	;
-
-param_expr:
-		'?' {
-			$$ = Expr::makeParameter(yylloc.total_column);
-			$$->ival2 = yyloc.param_list.size();
-			yyloc.param_list.push_back($$);
-		}
 	;
 
 

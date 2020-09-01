@@ -46,7 +46,7 @@ TEST(CreateStatementTest) {
   ASSERT_STREQ(stmt->columns->at(2)->name, "city");
   ASSERT_STREQ(stmt->columns->at(3)->name, "grade");
   ASSERT_STREQ(stmt->columns->at(4)->name, "comment");
-  ASSERT_EQ(stmt->columns->at(0)->type, (ColumnType{DataType::VARCHAR, 50}));
+  ASSERT_EQ(stmt->columns->at(0)->type, (ColumnType{DataType::VARCHAR, "50"}));
   ASSERT_EQ(stmt->columns->at(1)->type, ColumnType{DataType::INT});
   ASSERT_EQ(stmt->columns->at(2)->type, ColumnType{DataType::INT});
   ASSERT_EQ(stmt->columns->at(3)->type, ColumnType{DataType::DOUBLE});
@@ -284,7 +284,7 @@ TEST(HintTest) {
   ASSERT_STREQ("NO_CACHE", stmt->hints->at(0)->name);
   ASSERT_STREQ("SAMPLE_RATE", stmt->hints->at(1)->name);
   ASSERT_EQ(1, stmt->hints->at(1)->exprList->size());
-  ASSERT_EQ(10, stmt->hints->at(1)->exprList->at(0)->ival);
+  ASSERT_STREQ("10", stmt->hints->at(1)->exprList->at(0)->ival);
 }
 
 TEST(StringLengthTest) {
@@ -541,7 +541,7 @@ TEST(CastAsType) {
   ASSERT_EQ(1, stmt->selectList->size());
   ASSERT_STREQ("CAST", stmt->selectList->front()->name);
   ASSERT_EQ(DataType::VARCHAR, stmt->selectList->front()->columnType.data_type);
-  ASSERT_EQ(8, stmt->selectList->front()->columnType.length);
+  ASSERT_STREQ("8", stmt->selectList->front()->columnType.length);
 }
 
 TEST_MAIN();

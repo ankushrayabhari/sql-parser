@@ -1,20 +1,21 @@
 #include "statements.h"
+#include <cstring>
 
 namespace hsql {
 
   // ColumnDefinition
-  ColumnDefinition::ColumnDefinition(char* name, ColumnType type, bool nullable) :
+  ColumnDefinition::ColumnDefinition(char* name, ColumnType* t, bool nullable) :
     name(name),
-    type(type),
+    type(std::move(*t)),
     nullable(nullable) {};
 
   ColumnDefinition::~ColumnDefinition() {
     free(name);
   }
 
-  ColumnType::ColumnType(DataType data_type, int64_t length, int64_t scale) :
+  ColumnType::ColumnType(DataType data_type, std::string length, std::string scale) :
     data_type(data_type),
-    length(length), scale(scale) {};
+    length(std::move(length)), scale(std::move(scale)) {};
 
   bool operator==(const ColumnType& lhs, const ColumnType& rhs) {
     if (lhs.data_type != rhs.data_type) return false;

@@ -15,11 +15,10 @@ Expr::Expr(ExprType type)
       table(nullptr),
       alias(nullptr),
       fval(nullptr),
-      ival(0),
-      ival2(0),
+      ival(nullptr),
+      bval(false),
       datetimeField(kDatetimeNone),
-      columnType(DataType::UNKNOWN, 0),
-      isBoolLiteral(false),
+      columnType(DataType::UNKNOWN),
       opType(kOpNone),
       distinct(false){};
 
@@ -104,7 +103,7 @@ Expr* Expr::makeCase(Expr* expr, Expr* caseList, Expr* elseExpr) {
     return e;
 }
 
-Expr* Expr::makeLiteral(int64_t val) {
+Expr* Expr::makeIntLiteral(char* val) {
     Expr* e = new Expr(kExprLiteralInt);
     e->ival = val;
     return e;
@@ -123,9 +122,8 @@ Expr* Expr::makeLiteral(char* string) {
 }
 
 Expr* Expr::makeLiteral(bool val) {
-    Expr* e = new Expr(kExprLiteralInt);
-    e->ival = (int)val;
-    e->isBoolLiteral = true;
+    Expr* e = new Expr(kExprLiteralBool);
+    e->bval = val;
     return e;
 }
 
@@ -164,25 +162,6 @@ Expr* Expr::makeFunctionRef(char* func_name, std::vector<Expr*>* exprList,
     e->name = func_name;
     e->exprList = exprList;
     e->distinct = distinct;
-    return e;
-}
-
-Expr* Expr::makeArray(std::vector<Expr*>* exprList) {
-    Expr* e = new Expr(kExprArray);
-    e->exprList = exprList;
-    return e;
-}
-
-Expr* Expr::makeArrayIndex(Expr* expr, int64_t index) {
-    Expr* e = new Expr(kExprArrayIndex);
-    e->expr = expr;
-    e->ival = index;
-    return e;
-}
-
-Expr* Expr::makeParameter(int id) {
-    Expr* e = new Expr(kExprParameter);
-    e->ival = id;
     return e;
 }
 

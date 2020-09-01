@@ -124,7 +124,6 @@ UPDATE		TOKEN(UPDATE)
 VALUES		TOKEN(VALUES)
 AFTER		TOKEN(AFTER)
 ALTER		TOKEN(ALTER)
-ARRAY		TOKEN(ARRAY)
 CROSS		TOKEN(CROSS)
 DELTA		TOKEN(DELTA)
 FLOAT		TOKEN(FLOAT)
@@ -224,7 +223,7 @@ COMMIT      TOKEN(COMMIT)
 }
 
 -?[0-9]+	{
-	yylval->ival = atol(yytext);
+	yylval->sval = strdup(yytext);
 	return SQL_INTVAL;
 }
 

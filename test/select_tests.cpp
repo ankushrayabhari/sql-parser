@@ -78,10 +78,10 @@ TEST(SelectSubstrTest) {
   ASSERT_STREQ(stmt->selectList->at(0)->exprList->at(0)->getName(), "a");
 
   ASSERT(stmt->selectList->at(0)->exprList->at(1)->isType(kExprLiteralInt));
-  ASSERT_EQ(stmt->selectList->at(0)->exprList->at(1)->ival, 3);
+  ASSERT_STREQ(stmt->selectList->at(0)->exprList->at(1)->ival, "3");
 
   ASSERT(stmt->selectList->at(0)->exprList->at(2)->isType(kExprLiteralInt));
-  ASSERT_EQ(stmt->selectList->at(0)->exprList->at(2)->ival, 5);
+  ASSERT_STREQ(stmt->selectList->at(0)->exprList->at(2)->ival, "5");
 }
 
 
@@ -181,7 +181,7 @@ TEST(SelectBetweenTest) {
 
   ASSERT_EQ(where->exprList->size(), 2);
   ASSERT(where->exprList->at(0)->isType(kExprLiteralInt));
-  ASSERT_EQ(where->exprList->at(0)->ival, -1);
+  ASSERT_STREQ(where->exprList->at(0)->ival, "-1");
   ASSERT(where->exprList->at(1)->isType(kExprColumnRef));
   ASSERT_STREQ(where->exprList->at(1)->getName(), "c");
 }
@@ -310,7 +310,7 @@ TEST(SelectCaseValueWhenWhenElse) {
 
   Expr* whenExpr = caseExpr->exprList->at(2);
   ASSERT(whenExpr->expr->isType(kExprLiteralInt));
-  ASSERT_EQ(whenExpr->expr2->ival, 7);
+  ASSERT_STREQ(whenExpr->expr2->ival, "7");
 }
 
 TEST(SelectJoin) {
@@ -440,12 +440,11 @@ TEST(Operators) {
 
   stmt = (SelectStatement*) result.getStatement(0);
   ASSERT_EQ(stmt->whereClause->opType, kOpEquals);
-  ASSERT_EQ(stmt->whereClause->expr2->ival, 1);
-  ASSERT_EQ(stmt->whereClause->expr2->isBoolLiteral, false);
+  ASSERT_STREQ(stmt->whereClause->expr2->ival, "1");
 
   stmt = (SelectStatement*) result.getStatement(1);
   ASSERT_EQ(stmt->whereClause->opType, kOpEquals);
-  ASSERT_EQ(stmt->whereClause->expr2->ival, 2);
+  ASSERT_STREQ(stmt->whereClause->expr2->ival, "2");
 
   stmt = (SelectStatement*) result.getStatement(2);
   ASSERT_EQ(stmt->whereClause->opType, kOpNotEquals);
@@ -467,13 +466,11 @@ TEST(Operators) {
 
   stmt = (SelectStatement*) result.getStatement(8);
   ASSERT_EQ(stmt->whereClause->opType, kOpEquals);
-  ASSERT_EQ(stmt->whereClause->expr2->ival, 1);
-  ASSERT_EQ(stmt->whereClause->expr2->isBoolLiteral, true);
+  ASSERT_EQ(stmt->whereClause->expr2->bval, true);
 
   stmt = (SelectStatement*) result.getStatement(9);
   ASSERT_EQ(stmt->whereClause->opType, kOpEquals);
-  ASSERT_EQ(stmt->whereClause->expr2->ival, 0);
-  ASSERT_EQ(stmt->whereClause->expr2->isBoolLiteral, true);
+  ASSERT_EQ(stmt->whereClause->expr2->bval, false);
 }
 
 TEST(JoinTypes) {
@@ -551,47 +548,47 @@ TEST(SetLimitOffset) {
 
   stmt = (SelectStatement*) result.getStatement(0);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->limit->ival, 1);
+  ASSERT_STREQ(stmt->limit->limit->ival, "1");
   ASSERT_NULL(stmt->limit->offset);
 
   stmt = (SelectStatement*) result.getStatement(1);
   ASSERT_EQ(stmt->limit->limit->type, kExprOperator);
   ASSERT_EQ(stmt->limit->limit->opType, kOpPlus);
-  ASSERT_EQ(stmt->limit->limit->expr->ival, 1);
-  ASSERT_EQ(stmt->limit->limit->expr2->ival, 2);
+  ASSERT_STREQ(stmt->limit->limit->expr->ival, "1");
+  ASSERT_STREQ(stmt->limit->limit->expr2->ival, "2");
   ASSERT_NULL(stmt->limit->offset);
 
   stmt = (SelectStatement*) result.getStatement(2);
   ASSERT_NULL(stmt->limit->limit);
   ASSERT_EQ(stmt->limit->offset->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->offset->ival, 1);
+  ASSERT_STREQ(stmt->limit->offset->ival, "1");
 
   stmt = (SelectStatement*) result.getStatement(3);
   ASSERT_NULL(stmt->limit->limit);
   ASSERT_EQ(stmt->limit->offset->type, kExprOperator);
   ASSERT_EQ(stmt->limit->offset->opType, kOpPlus);
-  ASSERT_EQ(stmt->limit->offset->expr->ival, 1);
-  ASSERT_EQ(stmt->limit->offset->expr2->ival, 2);
+  ASSERT_STREQ(stmt->limit->offset->expr->ival, "1");
+  ASSERT_STREQ(stmt->limit->offset->expr2->ival, "2");
 
   stmt = (SelectStatement*) result.getStatement(4);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->limit->ival, 1);
+  ASSERT_STREQ(stmt->limit->limit->ival, "1");
   ASSERT_EQ(stmt->limit->offset->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->offset->ival, 1);
+  ASSERT_STREQ(stmt->limit->offset->ival, "1");
 
   stmt = (SelectStatement*) result.getStatement(5);
   ASSERT_EQ(stmt->limit->limit->type, kExprOperator);
   ASSERT_EQ(stmt->limit->limit->opType, kOpPlus);
-  ASSERT_EQ(stmt->limit->limit->expr->ival, 1);
-  ASSERT_EQ(stmt->limit->limit->expr2->ival, 2);
+  ASSERT_STREQ(stmt->limit->limit->expr->ival, "1");
+  ASSERT_STREQ(stmt->limit->limit->expr2->ival, "2");
   ASSERT_EQ(stmt->limit->offset->type, kExprOperator);
   ASSERT_EQ(stmt->limit->offset->opType, kOpPlus);
-  ASSERT_EQ(stmt->limit->offset->expr->ival, 1);
-  ASSERT_EQ(stmt->limit->offset->expr2->ival, 2);
+  ASSERT_STREQ(stmt->limit->offset->expr->ival, "1");
+  ASSERT_STREQ(stmt->limit->offset->expr2->ival, "2");
 
   stmt = (SelectStatement*) result.getStatement(6);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->limit->ival, 1);
+  ASSERT_STREQ(stmt->limit->limit->ival, "1");
   ASSERT_EQ(stmt->limit->offset->type, kExprLiteralNull);
 
   stmt = (SelectStatement*) result.getStatement(7);
@@ -605,21 +602,21 @@ TEST(SetLimitOffset) {
   stmt = (SelectStatement*) result.getStatement(9);
   ASSERT_NULL(stmt->limit->limit);
   ASSERT_EQ(stmt->limit->offset->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->offset->ival, 1);
+  ASSERT_STREQ(stmt->limit->offset->ival, "1");
 
   stmt = (SelectStatement*) result.getStatement(10);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralNull);
   ASSERT_EQ(stmt->limit->offset->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->offset->ival, 1);
+  ASSERT_STREQ(stmt->limit->offset->ival, "1");
 
   stmt = (SelectStatement*) result.getStatement(11);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->limit->ival, 10);
+  ASSERT_STREQ(stmt->limit->limit->ival, "10");
   ASSERT_NULL(stmt->limit->offset);
 
   stmt = (SelectStatement*) result.getStatement(12);
   ASSERT_EQ(stmt->limit->limit->type, kExprLiteralInt);
-  ASSERT_EQ(stmt->limit->limit->ival, 10);
+  ASSERT_STREQ(stmt->limit->limit->ival, "10");
   ASSERT_NULL(stmt->limit->offset);
 
   stmt = (SelectStatement*) result.getStatement(13);

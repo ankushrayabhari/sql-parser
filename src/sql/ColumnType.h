@@ -2,6 +2,7 @@
 #define SQLPARSER_COLUMN_TYPE_H
 
 #include <ostream>
+#include <string>
 
 namespace hsql {
   enum class DataType {
@@ -22,11 +23,10 @@ namespace hsql {
 
   // Represents the type of a column, e.g., FLOAT or VARCHAR(10)
   struct ColumnType {
-    ColumnType() = default;
-    ColumnType(DataType data_type, int64_t length = 0, int64_t scale = 0);
+    ColumnType(DataType data_type = DataType::UNKNOWN, std::string length = "", std::string scale = "");
     DataType data_type;
-    int64_t length;  // Used for, e.g., VARCHAR(10)
-    int64_t scale; // Used for DECIMAL(length, scale)
+    std::string length;  // Used for, e.g., VARCHAR(10)
+    std::string scale; // Used for DECIMAL(length, scale)
   };
 
   bool operator==(const ColumnType& lhs, const ColumnType& rhs);
