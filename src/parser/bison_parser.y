@@ -566,7 +566,8 @@ column_type:
 	|	TEXT { $$ = ColumnType{DataType::TEXT}; }
 	|	DATETIME { $$ = ColumnType{DataType::DATETIME}; }
 	|	DATE { $$ = ColumnType{DataType::DATE}; }
-	|	TIMESTAMP { $$ = ColumnType{DataType::TIMESTAMP}; }; 
+	|	TIMESTAMP { $$ = ColumnType{DataType::TIMESTAMP}; };
+	|	TIME { $$ = ColumnType{DataType::TIME}; }
 	;
 
 opt_column_nullable:
