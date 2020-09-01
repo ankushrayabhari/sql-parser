@@ -16,7 +16,8 @@ namespace hsql {
     DATE,
     TIMESTAMP,
     TIME,
-    DECIMAL
+    DECIMAL,
+    BOOLEAN
   };
 
   // Represents the type of a column, e.g., FLOAT or VARCHAR(10)

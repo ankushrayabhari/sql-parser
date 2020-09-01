@@ -45,6 +45,9 @@ namespace hsql {
       case DataType::DOUBLE:
         stream << "DOUBLE";
         break;
+      case DataType::BOOLEAN:
+        stream << "BOOLEAN";
+        break;
       case DataType::CHAR:
         stream << "CHAR(" << column_type.length << ")";
         break;
