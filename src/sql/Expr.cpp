@@ -233,6 +233,19 @@ Expr* Expr::makeCast(Expr* expr, ColumnType columnType) {
     return e;
 }
 
+Expr* Expr::makeDate(char* name) {
+    Expr* e = new Expr(kExprLiteralDate);
+    e->name = name;
+    return e;
+}
+
+Expr* Expr::makeInterval(char* name, DatetimeField datetimeField) {
+    Expr* e = new Expr(kExprLiteralInterval);
+    e->name = name;
+    e->datetimeField = datetimeField;
+    return e;
+}
+
 bool Expr::isType(ExprType exprType) const { return exprType == type; }
 
 bool Expr::isLiteral() const {

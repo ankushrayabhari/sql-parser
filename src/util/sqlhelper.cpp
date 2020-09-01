@@ -151,6 +151,15 @@ namespace hsql {
       printExpression(expr->expr, numIndent + 1);
       inprint(expr->ival, numIndent);
       break;
+    case kExprLiteralDate:
+      inprint("DATE", numIndent);
+      inprint(expr->name, numIndent + 1);
+      break;
+    case kExprLiteralInterval:
+      inprint("INTERVAL", numIndent);
+      inprint(expr->name, numIndent + 1);
+      inprint(expr->datetimeField, numIndent + 1);
+      break;
     default:
       std::cerr << "Unrecognized expression type " << expr->type << std::endl;
       return;

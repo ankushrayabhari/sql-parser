@@ -28,7 +28,9 @@ enum ExprType {
     kExprArray,
     kExprArrayIndex,
     kExprExtract,
-    kExprCast    
+    kExprCast,
+    kExprLiteralDate,
+    kExprLiteralInterval    
 };
 
 // Operator types. These are important for expressions of type kExprOperator.
@@ -178,6 +180,10 @@ struct Expr {
     static Expr* makeExtract(DatetimeField datetimeField1, Expr* expr);
 
     static Expr* makeCast(Expr* expr, ColumnType columnType);
+
+    static Expr* makeDate(char* name);
+
+    static Expr* makeInterval(char* name, DatetimeField datetimeField);
 };
 
 // Zero initializes an Expr object and assigns it to a space in the heap

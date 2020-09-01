@@ -166,7 +166,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %token <ival> INTVAL
 
 /* SQL Keywords */
-%token DEALLOCATE PARAMETERS INTERSECT TEMPORARY TIMESTAMP
+%token DEALLOCATE PARAMETERS INTERSECT TEMPORARY TIMESTAMP INTERVAL
 %token DISTINCT NVARCHAR RESTRICT TRUNCATE ANALYZE BETWEEN
 %token CASCADE COLUMNS CONTROL DEFAULT EXECUTE EXPLAIN
 %token NATURAL PREPARE PRIMARY SCHEMAS
@@ -212,6 +212,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <expr> 		    column_name literal int_literal num_literal string_literal bool_literal
 %type <expr> 		    comp_expr opt_where join_condition opt_having case_expr case_list in_expr hint
 %type <expr> 		    array_expr array_index null_literal
+%type <expr> 		    date_expr interval_expr
 %type <limit>		    opt_limit opt_top
 %type <order>		    order_desc
 %type <order_type>	    opt_order_type
@@ -903,6 +904,7 @@ expr:
 	|	logic_expr
 	|	exists_expr
 	|	in_expr
+	|   date_expr
 	;
 
 operand:
@@ -916,6 +918,8 @@ operand:
 	|	extract_expr
 	|	cast_expr
 	|	array_expr
+	|	date_expr
+	|	interval_expr
 	|	'(' select_no_paren ')' { $$ = Expr::makeSelect($2); }
 	;
 
@@ -1008,6 +1012,14 @@ datetime_field:
     |   MONTH { $$ = kDatetimeMonth; }
     |   YEAR { $$ = kDatetimeYear; }
     ;
+
+date_expr:
+		DATE string_literal { $$ = Expr::makeDate($2->name); }
+	;
+
+interval_expr:
+		INTERVAL string_literal datetime_field { $$ = Expr::makeInterval($2->name, $3); }
+	;
 
 array_expr:
 	  	ARRAY '[' expr_list ']' { $$ = Expr::makeArray($3); }
