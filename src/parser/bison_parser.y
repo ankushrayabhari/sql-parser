@@ -212,7 +212,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <expr> 		    column_name literal int_literal num_literal string_literal bool_literal
 %type <expr> 		    comp_expr opt_where join_condition opt_having case_expr case_list in_expr hint
 %type <expr> 		    array_expr array_index null_literal
-%type <expr> 		    date_expr interval_expr
+%type <expr> 		    date_literal interval_literal
 %type <limit>		    opt_limit opt_top
 %type <order>		    order_desc
 %type <order_type>	    opt_order_type
@@ -826,6 +826,11 @@ opt_group:
 			$$->columns = $3;
 			$$->having = $4;
 		}
+	|	opt_having {
+			$$ = new GroupByDescription();
+			$$->columns = nullptr;
+			$$->having = $1;
+		}
 	|	/* empty */ { $$ = nullptr; }
 	;
 
@@ -904,7 +909,6 @@ expr:
 	|	logic_expr
 	|	exists_expr
 	|	in_expr
-	|   date_expr
 	;
 
 operand:
@@ -918,8 +922,6 @@ operand:
 	|	extract_expr
 	|	cast_expr
 	|	array_expr
-	|	date_expr
-	|	interval_expr
 	|	'(' select_no_paren ')' { $$ = Expr::makeSelect($2); }
 	;
 
@@ -1013,11 +1015,11 @@ datetime_field:
     |   YEAR { $$ = kDatetimeYear; }
     ;
 
-date_expr:
+date_literal:
 		DATE string_literal { $$ = Expr::makeDate($2->name); }
 	;
 
-interval_expr:
+interval_literal:
 		INTERVAL string_literal datetime_field { $$ = Expr::makeInterval($2->name, $3); }
 	;
 
@@ -1046,6 +1048,8 @@ literal:
 	|	num_literal
 	|	null_literal
 	|	param_expr
+	|	date_literal
+	|	interval_literal
 	;
 
 string_literal:

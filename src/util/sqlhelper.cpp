@@ -186,8 +186,13 @@ namespace hsql {
     }
 
     if (stmt->groupBy != nullptr) {
-      inprint("GroupBy:", numIndent + 1);
-      for (Expr* expr : *stmt->groupBy->columns) printExpression(expr, numIndent + 2);
+      if (stmt->groupBy->columns != nullptr) {
+        inprint("GroupBy:", numIndent + 1);
+        for (Expr* expr : *stmt->groupBy->columns) {
+          printExpression(expr, numIndent + 2);
+        }
+      }
+
       if (stmt->groupBy->having != nullptr) {
         inprint("Having:", numIndent + 1);
         printExpression(stmt->groupBy->having, numIndent + 2);
