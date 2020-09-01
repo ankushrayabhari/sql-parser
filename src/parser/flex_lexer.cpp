@@ -3842,7 +3842,7 @@ case 156:
 YY_RULE_SETUP
 #line 221 "flex_lexer.l"
 {
-	yylval->fval = atof(yytext);
+	yylval->sval = strdup(yytext);
 	return SQL_FLOATVAL;
 }
 	YY_BREAK

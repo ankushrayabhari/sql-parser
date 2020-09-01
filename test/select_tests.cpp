@@ -101,7 +101,7 @@ TEST(SelectHavingTest) {
   ASSERT_EQ(group->having->opType, kOpLess);
   ASSERT(group->having->expr->isType(kExprFunctionRef));
   ASSERT(group->having->expr2->isType(kExprLiteralFloat));
-  ASSERT_EQ(group->having->expr2->fval, -2.0);
+  ASSERT_EQ(std::string(group->having->expr2->fval), "-2.0");
 }
 
 

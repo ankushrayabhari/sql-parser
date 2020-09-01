@@ -25,7 +25,7 @@ TEST(DeleteStatementTest) {
   ASSERT_NOTNULL(stmt->expr);
   ASSERT(stmt->expr->isType(kExprOperator));
   ASSERT_STREQ(stmt->expr->expr->name, "grade");
-  ASSERT_EQ(stmt->expr->expr2->fval, 2.0);
+  ASSERT_EQ(std::string(stmt->expr->expr2->fval), "2.0");
 }
 
 TEST(CreateStatementTest) {
@@ -95,7 +95,7 @@ TEST(UpdateStatementTest) {
   ASSERT_STREQ(stmt->updates->at(1)->column, "name");
   ASSERT(stmt->updates->at(0)->value->isType(kExprLiteralFloat));
   ASSERT(stmt->updates->at(1)->value->isType(kExprLiteralString));
-  ASSERT_EQ(stmt->updates->at(0)->value->fval, 5.0);
+  ASSERT_EQ(std::string(stmt->updates->at(0)->value->fval), "5.0");
   ASSERT_STREQ(stmt->updates->at(1)->value->name, "test");
 
   ASSERT_NOTNULL(stmt->where);

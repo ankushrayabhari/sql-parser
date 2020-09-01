@@ -219,7 +219,7 @@ COMMIT      TOKEN(COMMIT)
 
 -?[0-9]+"."[0-9]* |
 "."[0-9]*	{
-	yylval->fval = atof(yytext);
+	yylval->sval = strdup(yytext);
 	return SQL_FLOATVAL;
 }
 

@@ -103,7 +103,7 @@ struct Expr {
     char* name;
     char* table;
     char* alias;
-    double fval;
+    char* fval;
     int64_t ival;
     int64_t ival2;
     DatetimeField datetimeField;
@@ -145,7 +145,7 @@ struct Expr {
 
     static Expr* makeLiteral(int64_t val);
 
-    static Expr* makeLiteral(double val);
+    static Expr* makeFloatLiteral(char* val);
 
     static Expr* makeLiteral(char* val);
 

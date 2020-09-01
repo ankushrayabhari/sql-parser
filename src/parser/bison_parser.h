@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.6.4.  */
+/* A Bison parser, made by GNU Bison 3.7.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -253,7 +253,6 @@ union HSQL_STYPE
 {
 #line 95 "bison_parser.y"
 
-	double fval;
 	int64_t ival;
 	char* sval;
 	uintmax_t uval;
@@ -299,7 +298,7 @@ union HSQL_STYPE
 	std::vector<hsql::OrderDescription*>* order_vec;
 	std::vector<hsql::WithDescription*>* with_description_vec;
 
-#line 303 "bison_parser.h"
+#line 302 "bison_parser.h"
 
 };
 typedef union HSQL_STYPE HSQL_STYPE;

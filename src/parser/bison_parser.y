@@ -93,7 +93,6 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
  ** Define all data-types (http://www.gnu.org/software/bison/manual/html_node/Union-Decl.html)
  *********************************/
 %union {
-	double fval;
 	int64_t ival;
 	char* sval;
 	uintmax_t uval;
@@ -144,7 +143,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 /*********************************
  ** Destructor symbols
  *********************************/
-%destructor { } <fval> <ival> <uval> <bval> <order_type> <datetime_field> <column_type_t> <import_type_t>
+%destructor { } <ival> <uval> <bval> <order_type> <datetime_field> <column_type_t> <import_type_t>
 %destructor { free( ($$.name) ); free( ($$.schema) ); } <table_name>
 %destructor { free( ($$) ); } <sval>
 %destructor {
@@ -161,8 +160,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 /*********************************
  ** Token Definition
  *********************************/
-%token <sval> IDENTIFIER STRING
-%token <fval> FLOATVAL
+%token <sval> IDENTIFIER STRING FLOATVAL
 %token <ival> INTVAL
 
 /* SQL Keywords */
@@ -210,7 +208,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <expr> 		    expr operand scalar_expr unary_expr binary_expr logic_expr exists_expr extract_expr cast_expr
 %type <expr>		    function_expr between_expr expr_alias param_expr
 %type <expr> 		    column_name literal int_literal num_literal string_literal bool_literal
-%type <expr> 		    comp_expr opt_where join_condition opt_having case_expr case_list in_expr hint
+%type <expr> 		    comp_expr opt_where join_condition case_expr case_list in_expr hint
 %type <expr> 		    array_expr array_index null_literal
 %type <expr> 		    date_literal interval_literal
 %type <limit>		    opt_limit opt_top
@@ -342,7 +340,7 @@ preparable_statement:
 
 opt_hints:
     WITH HINT '(' hint_list ')' { $$ = $4; }
-  | /* empty */ { $$ = nullptr; }
+  | /* empty */  %empty { $$ = nullptr; }
   ;
 
 
@@ -381,7 +379,7 @@ hint:
 
 opt_transaction_keyword:
         TRANSACTION
-    |   /* empty */
+    | %empty    /* empty */
     ;
 
 /******************************
@@ -455,7 +453,7 @@ opt_file_type:
 		WITH FORMAT file_type {
 			$$ = $3;
 		}
-	|	/* empty */  { $$ = kImportAuto; }
+	|	/* empty */   %empty { $$ = kImportAuto; }
 	;
 
 
@@ -539,7 +537,7 @@ create_statement:
 
 opt_not_exists:
 		IF NOT EXISTS { $$ = true; }
-	|	/* empty */ { $$ = false; }
+	|	/* empty */  %empty { $$ = false; }
 	;
 
 column_def_commalist:
@@ -575,7 +573,7 @@ column_type:
 opt_column_nullable:
 		NULL { $$ = true; }
 	|	NOT NULL { $$ = false; }
-	|	/* empty */ { $$ = false; }
+	|	/* empty */  %empty { $$ = false; }
 	;
 
 /******************************
@@ -606,7 +604,7 @@ drop_statement:
 
 opt_exists:
 		IF EXISTS   { $$ = true; }
-	|	/* empty */ { $$ = false; }
+	|	/* empty */  %empty { $$ = false; }
 	;
 
 /******************************
@@ -656,7 +654,7 @@ insert_statement:
 
 opt_column_list:
 		'(' ident_commalist ')' { $$ = $2; }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 
@@ -783,7 +781,7 @@ opt_all:
 		ALL {
 			$$ = true;
 		}
-	|	/* empty */ {
+	|	/* empty */  %empty {
 		$$ = false;
 	}
 	;
@@ -802,7 +800,7 @@ select_clause:
 
 opt_distinct:
 		DISTINCT { $$ = true; }
-	|	/* empty */ { $$ = false; }
+	|	/* empty */  %empty { $$ = false; }
 	;
 
 select_list:
@@ -811,7 +809,7 @@ select_list:
 
 opt_from_clause:
         from_clause  { $$ = $1; }
-    |   /* empty */  { $$ = nullptr; }
+    |   /* empty */   %empty { $$ = nullptr; }
     ;
 
 from_clause:
@@ -821,31 +819,31 @@ from_clause:
 
 opt_where:
 		WHERE expr { $$ = $2; }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 opt_group:
-		GROUP BY expr_list opt_having {
+		GROUP BY expr_list HAVING expr {
 			$$ = new GroupByDescription();
 			$$->columns = $3;
-			$$->having = $4;
+			$$->having = $5;
 		}
-	|	opt_having {
+	|	GROUP BY expr_list {
+			$$ = new GroupByDescription();
+			$$->columns = $3;
+			$$->having = nullptr;
+		}
+	|	HAVING expr {
 			$$ = new GroupByDescription();
 			$$->columns = nullptr;
-			$$->having = $1;
+			$$->having = $2;
 		}
-	|	/* empty */ { $$ = nullptr; }
-	;
-
-opt_having:
-		HAVING expr { $$ = $2; }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 opt_order:
 		ORDER BY order_list { $$ = $3; }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 order_list:
@@ -860,14 +858,14 @@ order_desc:
 opt_order_type:
 		ASC { $$ = kOrderAsc; }
 	|	DESC { $$ = kOrderDesc; }
-	|	/* empty */ { $$ = kOrderAsc; }
+	|	/* empty */  %empty { $$ = kOrderAsc; }
 	;
 
 // TODO: TOP and LIMIT can take more than just int literals.
 
 opt_top:
 		TOP int_literal { $$ = new LimitDescription($2, nullptr); }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 opt_limit:
@@ -876,7 +874,7 @@ opt_limit:
 	|	LIMIT expr OFFSET expr { $$ = new LimitDescription($2, $4); }
 	|	LIMIT ALL { $$ = new LimitDescription(nullptr, nullptr); }
 	|	LIMIT ALL OFFSET expr { $$ = new LimitDescription(nullptr, $4); }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 /******************************
@@ -889,7 +887,7 @@ expr_list:
 
 opt_literal_list:
 		literal_list { $$ = $1; }
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 literal_list:
@@ -1067,7 +1065,7 @@ bool_literal:
 	;
 
 num_literal:
-		FLOATVAL { $$ = Expr::makeLiteral($1); }
+		FLOATVAL { $$ = Expr::makeFloatLiteral($1); }
 	|	int_literal
 	;
 
@@ -1157,7 +1155,7 @@ table_alias:
 
 opt_table_alias:
 		table_alias
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 
@@ -1169,7 +1167,7 @@ alias:
 
 opt_alias:
 		alias
-	|	/* empty */ { $$ = nullptr; }
+	|	/* empty */  %empty { $$ = nullptr; }
 	;
 
 
@@ -1179,7 +1177,7 @@ opt_alias:
 
 opt_with_clause:
 		with_clause
-	| 	/* empty */ { $$ = nullptr; }
+	| 	/* empty */  %empty { $$ = nullptr; }
 	;
 
 with_clause:
@@ -1257,7 +1255,7 @@ opt_join_type:
 	|	OUTER		{ $$ = kJoinFull; }
 	|	FULL		{ $$ = kJoinFull; }
 	|	CROSS		{ $$ = kJoinCross; }
-	|	/* empty, default */	{ $$ = kJoinInner; }
+	|	/* empty, default */	 %empty { $$ = kJoinInner; }
 	;
 
 
@@ -1272,7 +1270,7 @@ join_condition:
 
 opt_semicolon:
 		';'
-	|	/* empty */
+	| %empty 	/* empty */
 	;
 
 

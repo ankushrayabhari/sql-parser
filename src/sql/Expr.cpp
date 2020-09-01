@@ -14,7 +14,7 @@ Expr::Expr(ExprType type)
       name(nullptr),
       table(nullptr),
       alias(nullptr),
-      fval(0),
+      fval(nullptr),
       ival(0),
       ival2(0),
       datetimeField(kDatetimeNone),
@@ -110,7 +110,7 @@ Expr* Expr::makeLiteral(int64_t val) {
     return e;
 }
 
-Expr* Expr::makeLiteral(double value) {
+Expr* Expr::makeFloatLiteral(char* value) {
     Expr* e = new Expr(kExprLiteralFloat);
     e->fval = value;
     return e;
