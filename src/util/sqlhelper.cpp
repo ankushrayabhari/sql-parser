@@ -15,8 +15,11 @@ namespace hsql {
   std::string indent(uintmax_t numIndent) {
     return std::string(numIndent, '\t');
   }
+  void inprint(bool val, uintmax_t numIndent) {
+    std::cout << indent(numIndent).c_str() << (val ? "true" : "false") << std::endl;
+  }
   void inprint(int64_t val, uintmax_t numIndent) {
-    std::cout << indent(numIndent).c_str() << val << "  " << std::endl;
+    std::cout << indent(numIndent).c_str() << val << std::endl;
   }
   void inprint(double val, uintmax_t numIndent) {
     std::cout << indent(numIndent).c_str() << val << std::endl;
@@ -117,6 +120,9 @@ namespace hsql {
       break;
     case kExprLiteralInt:
       inprint(expr->ival, numIndent);
+      break;
+    case kExprLiteralBool:
+      inprint(expr->bval, numIndent);
       break;
     case kExprLiteralString:
       inprint(expr->name, numIndent);
