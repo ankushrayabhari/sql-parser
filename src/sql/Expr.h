@@ -21,7 +21,6 @@ namespace hsql
         kExprLiteralInt,
         kExprLiteralNull,
         kExprStar,
-        kExprParameter,
         kExprColumnRef,
         kExprFunctionRef,
         kExprOperator,

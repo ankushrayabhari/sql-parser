@@ -177,9 +177,6 @@ namespace hsql
     case kExprSelect:
       printSelectStatementInfo(expr->select, numIndent);
       break;
-    case kExprParameter:
-      inprint(expr->ival, numIndent);
-      break;
     case kExprLiteralDate:
       inprint("DATE", numIndent);
       inprint(expr->name, numIndent + 1);
