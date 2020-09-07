@@ -6,196 +6,200 @@
 #include <vector>
 #include "ColumnType.h"
 
-namespace hsql {
-struct SelectStatement;
+namespace hsql
+{
+    struct SelectStatement;
 
-// Helper function used by the lexer.
-// TODO: move to more appropriate place.
-char* substr(const char* source, int from, int to);
+    // Helper function used by the lexer.
+    // TODO: move to more appropriate place.
+    char *substr(const char *source, int from, int to);
 
-enum ExprType {
-    kExprLiteralFloat,
-    kExprLiteralString,
-    kExprLiteralInt,
-    kExprLiteralNull,
-    kExprStar,
-    kExprParameter,
-    kExprColumnRef,
-    kExprFunctionRef,
-    kExprOperator,
-    kExprSelect,
-    kExprHint,
-    kExprArray,
-    kExprArrayIndex,
-    kExprExtract,
-    kExprCast,
-    kExprLiteralDate,
-    kExprLiteralInterval,
-    kExprLiteralBool    
-};
+    enum ExprType
+    {
+        kExprLiteralFloat,
+        kExprLiteralString,
+        kExprLiteralInt,
+        kExprLiteralNull,
+        kExprStar,
+        kExprParameter,
+        kExprColumnRef,
+        kExprFunctionRef,
+        kExprOperator,
+        kExprSelect,
+        kExprHint,
+        kExprExtract,
+        kExprCast,
+        kExprLiteralDate,
+        kExprLiteralInterval,
+        kExprLiteralBool
+    };
 
-// Operator types. These are important for expressions of type kExprOperator.
-enum OperatorType {
-    kOpNone,
+    // Operator types. These are important for expressions of type kExprOperator.
+    enum OperatorType
+    {
+        kOpNone,
 
-    // Ternary operator
-    kOpBetween,
+        // Ternary operator
+        kOpBetween,
 
-    // n-nary special case
-    kOpCase,
-    kOpCaseListElement,  // `WHEN expr THEN expr`
+        // n-nary special case
+        kOpCase,
+        kOpCaseListElement, // `WHEN expr THEN expr`
 
-    // Binary operators.
-    kOpPlus,
-    kOpMinus,
-    kOpAsterisk,
-    kOpSlash,
-    kOpPercentage,
-    kOpCaret,
+        // Binary operators.
+        kOpPlus,
+        kOpMinus,
+        kOpAsterisk,
+        kOpSlash,
+        kOpPercentage,
+        kOpCaret,
 
-    kOpEquals,
-    kOpNotEquals,
-    kOpLess,
-    kOpLessEq,
-    kOpGreater,
-    kOpGreaterEq,
-    kOpLike,
-    kOpNotLike,
-    kOpILike,
-    kOpAnd,
-    kOpOr,
-    kOpIn,
-    kOpConcat,
+        kOpEquals,
+        kOpNotEquals,
+        kOpLess,
+        kOpLessEq,
+        kOpGreater,
+        kOpGreaterEq,
+        kOpLike,
+        kOpNotLike,
+        kOpILike,
+        kOpAnd,
+        kOpOr,
+        kOpIn,
+        kOpConcat,
 
-    // Unary operators.
-    kOpNot,
-    kOpUnaryMinus,
-    kOpIsNull,
-    kOpExists
-};
+        // Unary operators.
+        kOpNot,
+        kOpUnaryMinus,
+        kOpIsNull,
+        kOpExists
+    };
 
-enum DatetimeField {
-    kDatetimeNone,
-    kDatetimeSecond,
-    kDatetimeMinute,
-    kDatetimeHour,
-    kDatetimeDay,
-    kDatetimeMonth,
-    kDatetimeYear,
-    kDatetimeQuarter
-};
+    enum DatetimeField
+    {
+        kDatetimeNone,
+        kDatetimeSecond,
+        kDatetimeMinute,
+        kDatetimeHour,
+        kDatetimeDay,
+        kDatetimeMonth,
+        kDatetimeYear,
+        kDatetimeQuarter
+    };
 
-typedef struct Expr Expr;
+    typedef struct Expr Expr;
 
-// Represents SQL expressions (i.e. literals, operators, column_refs).
-// TODO: When destructing a placeholder expression, we might need to alter the
-// placeholder_list.
-struct Expr {
-    Expr(ExprType type);
-    virtual ~Expr();
+    // Represents SQL expressions (i.e. literals, operators, column_refs).
+    // TODO: When destructing a placeholder expression, we might need to alter the
+    // placeholder_list.
+    struct Expr
+    {
+        Expr(ExprType type);
+        virtual ~Expr();
 
-    ExprType type;
+        ExprType type;
 
-    // TODO: Replace expressions by list.
-    Expr* expr;
-    Expr* expr2;
-    std::vector<Expr*>* exprList;
-    SelectStatement* select;
-    char* name;
-    char* table;
-    char* alias;
-    char* fval;
-    char* ival;
-    bool  bval;
-    DatetimeField datetimeField;
-    ColumnType columnType;
+        // TODO: Replace expressions by list.
+        Expr *expr;
+        Expr *expr2;
+        std::vector<Expr *> *exprList;
+        SelectStatement *select;
+        char *name;
+        char *table;
+        char *alias;
+        char *fval;
+        char *ival;
+        bool bval;
+        DatetimeField datetimeField;
+        ColumnType columnType;
 
-    OperatorType opType;
-    bool distinct;
+        OperatorType opType;
+        bool distinct;
 
-    // Convenience accessor methods.
+        // Convenience accessor methods.
 
-    bool isType(ExprType exprType) const;
+        bool isType(ExprType exprType) const;
 
-    bool isLiteral() const;
+        bool isLiteral() const;
 
-    bool hasAlias() const;
+        bool hasAlias() const;
 
-    bool hasTable() const;
+        bool hasTable() const;
 
-    const char* getName() const;
+        const char *getName() const;
 
-    // Static constructors.
+        // Static constructors.
 
-    static Expr* make(ExprType type);
+        static Expr *make(ExprType type);
 
-    static Expr* makeOpUnary(OperatorType op, Expr* expr);
+        static Expr *makeOpUnary(OperatorType op, Expr *expr);
 
-    static Expr* makeOpBinary(Expr* expr1, OperatorType op, Expr* expr2);
+        static Expr *makeOpBinary(Expr *expr1, OperatorType op, Expr *expr2);
 
-    static Expr* makeBetween(Expr* expr, Expr* left, Expr* right);
+        static Expr *makeBetween(Expr *expr, Expr *left, Expr *right);
 
-    static Expr* makeCaseList(Expr* caseListElement);
+        static Expr *makeCaseList(Expr *caseListElement);
 
-    static Expr* makeCaseListElement(Expr* when, Expr* then);
+        static Expr *makeCaseListElement(Expr *when, Expr *then);
 
-    static Expr* caseListAppend(Expr* caseList, Expr* caseListElement);
+        static Expr *caseListAppend(Expr *caseList, Expr *caseListElement);
 
-    static Expr* makeCase(Expr* expr, Expr* when, Expr* elseExpr);
+        static Expr *makeCase(Expr *expr, Expr *when, Expr *elseExpr);
 
-    static Expr* makeIntLiteral(char* val);
+        static Expr *makeIntLiteral(char *val);
 
-    static Expr* makeFloatLiteral(char* val);
+        static Expr *makeFloatLiteral(char *val);
 
-    static Expr* makeLiteral(char* val);
+        static Expr *makeLiteral(char *val);
 
-    static Expr* makeLiteral(bool val);
+        static Expr *makeLiteral(bool val);
 
-    static Expr* makeNullLiteral();
+        static Expr *makeNullLiteral();
 
-    static Expr* makeColumnRef(char* name);
+        static Expr *makeColumnRef(char *name);
 
-    static Expr* makeColumnRef(char* table, char* name);
+        static Expr *makeColumnRef(char *table, char *name);
 
-    static Expr* makeStar(void);
+        static Expr *makeStar(void);
 
-    static Expr* makeStar(char* table);
+        static Expr *makeStar(char *table);
 
-    static Expr* makeFunctionRef(char* func_name, std::vector<Expr*>* exprList,
-                                 bool distinct);
+        static Expr *makeFunctionRef(char *func_name, std::vector<Expr *> *exprList,
+                                     bool distinct);
 
-    static Expr* makeParameter(int id);
+        static Expr *makeParameter(int id);
 
-    static Expr* makeSelect(SelectStatement* select);
+        static Expr *makeSelect(SelectStatement *select);
 
-    static Expr* makeExists(SelectStatement* select);
+        static Expr *makeExists(SelectStatement *select);
 
-    static Expr* makeInOperator(Expr* expr, std::vector<Expr*>* exprList);
+        static Expr *makeInOperator(Expr *expr, std::vector<Expr *> *exprList);
 
-    static Expr* makeInOperator(Expr* expr, SelectStatement* select);
+        static Expr *makeInOperator(Expr *expr, SelectStatement *select);
 
-    static Expr* makeExtract(DatetimeField datetimeField1, Expr* expr);
+        static Expr *makeExtract(DatetimeField datetimeField1, Expr *expr);
 
-    static Expr* makeCast(Expr* expr, ColumnType columnType);
+        static Expr *makeCast(Expr *expr, ColumnType columnType);
 
-    static Expr* makeDate(char* name);
+        static Expr *makeDate(char *name);
 
-    static Expr* makeInterval(char* name, DatetimeField datetimeField);
-};
+        static Expr *makeInterval(char *name, DatetimeField datetimeField);
+    };
 
 // Zero initializes an Expr object and assigns it to a space in the heap
 // For Hyrise we still had to put in the explicit NULL constructor
 // http://www.ex-parrot.com/~chris/random/initialise.html
 // Unused
-#define ALLOC_EXPR(var, type)             \
-    Expr* var;                            \
-    do {                                  \
-        Expr zero = {type};               \
-        var = (Expr*)malloc(sizeof *var); \
-        *var = zero;                      \
+#define ALLOC_EXPR(var, type)              \
+    Expr *var;                             \
+    do                                     \
+    {                                      \
+        Expr zero = {type};                \
+        var = (Expr *)malloc(sizeof *var); \
+        *var = zero;                       \
     } while (0);
 #undef ALLOC_EXPR
 
-}  // namespace hsql
+} // namespace hsql
 
 #endif
