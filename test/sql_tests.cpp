@@ -271,33 +271,6 @@ TEST(MoveSQLResultTest) {
   ASSERT_EQ(1, new_res.size());
 }
 
-TEST(HintTest) {
-  TEST_PARSE_SINGLE_SQL(
-    "SELECT * FROM students WITH HINT(NO_CACHE, SAMPLE_RATE(10));",
-    kStmtSelect,
-    SelectStatement,
-    result,
-    stmt);
-
-  ASSERT_NOTNULL(stmt->hints);
-  ASSERT_EQ(2, stmt->hints->size());
-  ASSERT_STREQ("NO_CACHE", stmt->hints->at(0)->name);
-  ASSERT_STREQ("SAMPLE_RATE", stmt->hints->at(1)->name);
-  ASSERT_EQ(1, stmt->hints->at(1)->exprList->size());
-  ASSERT_STREQ("10", stmt->hints->at(1)->exprList->at(0)->ival);
-}
-
-TEST(StringLengthTest) {
-  TEST_PARSE_SQL_QUERY(
-    "SELECT * FROM bar; INSERT INTO foo VALUES (4);\t\n SELECT * FROM foo;",
-    result,
-    3);
-
-  ASSERT_EQ(result.getStatement(0)->stringLength, 18);
-  ASSERT_EQ(result.getStatement(1)->stringLength, 28);
-  ASSERT_EQ(result.getStatement(2)->stringLength, 21);
-}
-
 TEST(ExceptOperatorTest) {
   TEST_PARSE_SINGLE_SQL(
     "SELECT * FROM students EXCEPT SELECT * FROM students_2;",

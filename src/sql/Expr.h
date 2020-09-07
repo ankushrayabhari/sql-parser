@@ -26,7 +26,6 @@ namespace hsql
         kExprFunctionRef,
         kExprOperator,
         kExprSelect,
-        kExprHint,
         kExprExtract,
         kExprCast,
         kExprLiteralDate,

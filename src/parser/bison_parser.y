@@ -173,7 +173,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %token TABLES UNIQUE UNLOAD UPDATE VALUES AFTER ALTER CROSS
 %token DELTA FLOAT GROUP INDEX INNER LIMIT LOCAL MERGE MINUS ORDER
 %token OUTER RIGHT TABLE UNION USING WHERE CALL CASE CHAR COPY DATE DATETIME
-%token DESC DROP ELSE FILE FROM FULL HASH HINT INTO JOIN
+%token DESC DROP ELSE FILE FROM FULL HASH INTO JOIN
 %token LEFT LIKE LOAD LONG NULL PLAN SHOW TEXT THEN TIME
 %token VIEW WHEN WITH ADD ALL AND ASC END FOR INT KEY TINYINT SMALLINT BIGINT
 %token NOT OFF SET TOP AS BY IF IN IS OF ON OR TO
@@ -207,7 +207,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <expr> 		    expr operand scalar_expr unary_expr binary_expr logic_expr exists_expr extract_expr cast_expr
 %type <expr>		    function_expr between_expr expr_alias
 %type <expr> 		    column_name literal int_literal num_literal string_literal bool_literal
-%type <expr> 		    comp_expr opt_where join_condition case_expr case_list in_expr hint
+%type <expr> 		    comp_expr opt_where join_condition case_expr case_list in_expr
 %type <expr> 		    null_literal
 %type <expr> 		    date_literal interval_literal
 %type <limit>		    opt_limit opt_top
@@ -226,7 +226,7 @@ int yyerror(YYLTYPE* llocp, SQLParserResult* result, yyscan_t scanner, const cha
 %type <import_type_t>	opt_file_type file_type
 
 %type <str_vec>			ident_commalist opt_column_list
-%type <expr_vec> 		expr_list select_list opt_literal_list literal_list hint_list opt_hints
+%type <expr_vec> 		expr_list select_list opt_literal_list literal_list
 %type <table_vec> 		table_ref_commalist
 %type <order_vec>		opt_order order_list
 %type <with_description_vec> 	opt_with_clause with_clause with_description_list
@@ -290,13 +290,11 @@ statement_list:
 	;
 
 statement:
-		prepare_statement opt_hints {
+		prepare_statement {
 			$$ = $1;
-			$$->hints = $2;
 		}
-	|	preparable_statement opt_hints {
+	|	preparable_statement {
 			$$ = $1;
-			$$->hints = $2;
 		}
 	|	show_statement {
 			$$ = $1;
@@ -322,33 +320,6 @@ preparable_statement:
 	|	transaction_statement { $$ = $1; }
 	;
 
-
-/******************************
- * Hints
- ******************************/
-
-opt_hints:
-    WITH HINT '(' hint_list ')' { $$ = $4; }
-  | /* empty */  %empty { $$ = nullptr; }
-  ;
-
-
-hint_list:
-	  hint { $$ = new std::vector<Expr*>(); $$->push_back($1); }
-	| hint_list ',' hint { $1->push_back($3); $$ = $1; }
-	;
-
-hint:
-		IDENTIFIER {
-			$$ = Expr::make(kExprHint);
-			$$->name = $1;
-		}
-	| IDENTIFIER '(' literal_list ')' {
-			$$ = Expr::make(kExprHint);
-			$$->name = $1;
-			$$->exprList = $3;
-		}
-	;
 
 /******************************
  * Transaction Statement

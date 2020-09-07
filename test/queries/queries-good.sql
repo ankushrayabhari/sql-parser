@@ -61,10 +61,6 @@ COPY students TO 'file_path' WITH FORMAT TBL;
 COPY students TO 'file_path' WITH FORMAT CSV;
 COPY students TO 'file_path' WITH FORMAT BIN;
 COPY students TO 'file_path' WITH FORMAT BINARY;
-# HINTS
-SELECT * FROM test WITH HINT(NO_CACHE);
-SELECT * FROM test WITH HINT(NO_CACHE, NO_SAMPLING);
-SELECT * FROM test WITH HINT(NO_CACHE, SAMPLE_RATE(0.1), OMW(1.0, 'test'));
 SHOW TABLES;
 SHOW COLUMNS students;
 DESCRIBE students;
