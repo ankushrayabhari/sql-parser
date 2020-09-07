@@ -449,7 +449,6 @@ namespace hsql
         {kOpGreater, ">"},
         {kOpGreaterEq, ">="},
         {kOpLike, "LIKE"},
-        {kOpNotLike, "NOT LIKE"},
         {kOpILike, "ILIKE"},
         {kOpAnd, "AND"},
         {kOpOr, "OR"},

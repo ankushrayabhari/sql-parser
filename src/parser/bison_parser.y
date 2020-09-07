@@ -907,7 +907,7 @@ binary_expr:
 	|	operand '%' operand			{ $$ = Expr::makeOpBinary($1, kOpPercentage, $3); }
 	|	operand '^' operand			{ $$ = Expr::makeOpBinary($1, kOpCaret, $3); }
 	|	operand LIKE operand		{ $$ = Expr::makeOpBinary($1, kOpLike, $3); }
-	|	operand NOT LIKE operand	{ $$ = Expr::makeOpBinary($1, kOpNotLike, $4); }
+	|	operand NOT LIKE operand	{  $$ = Expr::makeOpUnary(kOpNot, Expr::makeOpBinary($1, kOpLike, $4)); }
 	|	operand ILIKE operand		{ $$ = Expr::makeOpBinary($1, kOpILike, $3); }
 	|	operand CONCAT operand	{ $$ = Expr::makeOpBinary($1, kOpConcat, $3); }
 	;

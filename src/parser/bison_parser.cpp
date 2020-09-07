@@ -3987,7 +3987,7 @@ yyreduce:
 
   case 163: /* binary_expr: operand NOT LIKE operand  */
 #line 910 "bison_parser.y"
-                                                { (yyval.expr) = Expr::makeOpBinary((yyvsp[-3].expr), kOpNotLike, (yyvsp[0].expr)); }
+                                                {  (yyval.expr) = Expr::makeOpUnary(kOpNot, Expr::makeOpBinary((yyvsp[-3].expr), kOpLike, (yyvsp[0].expr))); }
 #line 3992 "bison_parser.cpp"
     break;
 

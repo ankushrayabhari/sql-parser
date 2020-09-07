@@ -60,7 +60,6 @@ namespace hsql
         kOpGreater,
         kOpGreaterEq,
         kOpLike,
-        kOpNotLike,
         kOpILike,
         kOpAnd,
         kOpOr,
